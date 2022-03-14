@@ -1,0 +1,11 @@
+---
+- name: Add X11 forwarding to sshd_config
+  lineinfile:
+    path: /etc/ssh/sshd_config
+    line: "X11Forwarding yes"
+    state: present
+
+- name:
+  systemd:
+    name: sshd.service
+    state: reloaded

@@ -1,0 +1,6 @@
+---
+- hosts: all
+
+  roles:
+    - { role: x11-forwarding, become: yes }
+    - doom-emacs

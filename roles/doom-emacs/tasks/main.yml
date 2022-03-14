@@ -1,0 +1,44 @@
+---
+- name: Install debian dependencies
+  apt:
+    name:
+      - emacs
+      - git
+      - ripgrep
+      - fd-find
+      - python3-pexpect
+    state: latest
+  when: ansible_os_family == "Debian"
+  become: yes
+
+- name: Install redhat dependencies
+  dnf:
+    name:
+      - emacs
+      - git
+      - ripgrep
+      - fd-find
+      - python3-pexpect
+    state: latest
+  when: ansible_os_family == "RedHat"
+  become: yes
+
+- name: Clone doom emacs config repo
+  git:
+    repo: "{{ doom_config_repo }}"
+    dest: ~/.doom.d
+  register: result
+
+- name: Clone doom emacs repo
+  git:
+    repo: https://github.com/hlissner/doom-emacs
+    depth: 1
+    dest: ~/.emacs.d
+
+- name: Install doom emacs
+  expect:
+    command: /home/bsharkey/.emacs.d/bin/doom install
+    responses:
+      "Generate an envvar file?": "y"
+      "Download and install all-the-icon's fonts?": "y"
+    timeout: 1200
